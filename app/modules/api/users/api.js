@@ -13,17 +13,18 @@ router.post('/register', (req, res) => {
         if (err) return res.status(400).send({ error: err.toString(), message: 'Username already exists' });
         res.status(200).send({ message: 'Successfully registered!', login: 'true' });
     });         
-
- 
-
 });
 
 router.post('/login', (req, res) => {
+	var result;
     db.query('SELECT * FROM users WHERE username=? and password=md5(?)', [req.body.username, req.body.password], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
-        if (results.Length == 0) 
-            return res.status(200).send({ message: 'Invalid Username or Password', login: 'false' });
-        res.status(200).send(Object.assign(results[0], {login: 'true', message: 'Successfully logged in!'}));
+        try{
+       		result = Object.assign(results[0], {login: 'true', message: 'Successfully logged in!'});
+        }catch(error){
+            result = { error: error.toString(), message: 'Invalid Username or Password', login: 'false' };
+        }
+    	res.status(200).send(result)
     });
 });
 

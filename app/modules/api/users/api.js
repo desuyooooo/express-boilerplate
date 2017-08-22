@@ -2,7 +2,7 @@ var router = require('express').Router();
 var db = require('../../../lib/database')();
 
 router.get('/', (req, res) => {
-    db.query('SELECT * FROM users', (err, results, fields) => {
+    db.query('SELECT id, username FROM users ORDER BY username ASC', (err, results, fields) => {
         if (err) return res.status(400).send({ error: err });
         res.status(200).send(results);
     });

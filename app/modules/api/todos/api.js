@@ -23,7 +23,7 @@ router.post('/theirs', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    db.query('INSERT INTO todos (`title`, `description`, `assigned_by`, `assigned_to`, `done`) VALUES (?, ?, ?, ?, false)', [req.body.title, req.body.description, req.body.assigned_by, req.body.assigned_to], (err, results, fields) => {
+    db.query('INSERT INTO todos (`title`, `description`, `assigned_by`, `assigned_to`, `done`, `date_created`) VALUES (?, ?, ?, ?, 0, CURRENT_TIMESTAMP)', [req.body.title, req.body.description, req.body.assigned_by, req.body.assigned_to], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send({ message: 'Successfully added todo!' });
     });

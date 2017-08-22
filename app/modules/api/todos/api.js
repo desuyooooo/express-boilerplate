@@ -34,6 +34,13 @@ router.get('/:id', (req, res) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results[0]);
     })
-})
+});
+
+router.post('/', (req, res) => {
+    db.query('DELETE FROM todos WHERE id=?', [req.body.title], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err.toString() });
+        res.status(200).send(results[0]);
+    });
+});
 
 module.exports = router;

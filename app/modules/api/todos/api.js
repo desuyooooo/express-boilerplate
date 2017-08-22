@@ -1,8 +1,22 @@
 var router = require('express').Router();
 var db = require('../../../lib/database')();
 
-router.post('/', (req, res) => {
+router.post('/all', (req, res) => {
     db.query('SELECT * FROM todos WHERE assigned_by=? or assigned_to=?', [req.body.userid, req.body.userid], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err });
+        res.status(200).send(results);
+    });
+});
+
+router.post('/mine', (req, res) => {
+    db.query('SELECT * FROM todos WHERE assigned_to=?', [req.body.userid], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err });
+        res.status(200).send(results);
+    });
+});
+
+router.post('/theirs', (req, res) => {
+    db.query('SELECT * FROM todos WHERE assigned_by=?', [req.body.userid], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err });
         res.status(200).send(results);
     });

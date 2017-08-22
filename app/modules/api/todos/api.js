@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    db.query('DELETE FROM todos WHERE id=?', [req.body.title], (err, results, fields) => {
+    db.query('DELETE FROM todos WHERE id=?', [req.body.id], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results[0]);
     });

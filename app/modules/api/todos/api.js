@@ -51,14 +51,14 @@ router.post('/:id/comments', (req, res) => {
 });
 // by mode display logs
 router.post('/logs', (req, res) => {
-    db.query('SELECT l.id, l.todo_id, l.mode, l.modified_by, (SELECT username FROM users WHERE id=l.modified_by) as name_modified_by, l.date_modified, t.title FROM logs l, todos t, users u WHERE (t.assigned_by=? OR t.assigned_to=?) AND l.todo_id=t.id AND t.assigned_by=u.id ORDER BY l.date_modified DESC', [req.body.userid, req.body.userid], (err, results, fields) => {
+    db.query('SELECT l.id, l.todo_id, l.mode, l.content,l.modified_by, (SELECT username FROM users WHERE id=l.modified_by) as name_modified_by, l.date_modified, t.title, l.assigned_to, l.assigned_by FROM logs l, todos t, users u WHERE (t.assigned_by=? OR t.assigned_to=?) ORDER BY l.date_modified DESC', [req.body.userid, req.body.userid], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
     });
 });
 // by mode insert
 router.post('/logs/insert', (req, res) => {
-    db.query('INSERT INTO logs(`todo_id`, `mode`, `content`, `modified_by`) VALUES (?, ?, ?, ?)', [req.body.todo_id, req.body.mode, req.body.content, req.body.modified_by], (err, results, fields) => {
+    db.query('INSERT INTO logs(`todo_id`, `mode`, `content`, `modified_by`, `assigned_by`, `assigned_to`) VALUES (?, ?, ?, ?, ?, ?)', [req.body.todo_id, req.body.mode, req.body.content, req.body.modified_by, req.body.assigned_by, req.body.assigned_to], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send({ message: 'Successfully added to logs'});
     });
@@ -98,6 +98,6 @@ table name: comments
 create table comments (id int primary key not null auto_increment, todo_id int not null, comment_by int not null, content varchar (100) not null, comment_date datetime default CURRENT_TIMESTAMP());
 
 table name: logs
-create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP());
+create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP(), assigned_to varchar (50) not null, assigned_by varchar (50) not null);
 */
 module.exports = router;

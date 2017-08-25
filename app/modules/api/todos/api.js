@@ -2,14 +2,14 @@ var router = require('express').Router();
 var db = require('../../../lib/database')();
 // display all
 router.post('/', (req, res) => {
-    db.query('SELECT * FROM todos WHERE assigned_by=? or assigned_to=?', [req.body.userid, req.body.userid], (err, results, fields) => {
+    db.query("SELECT id, title, description, done, date_format(date_created, '%b %e %Y %H:%i') as date_created, date_format(date_modified, '%b %e %Y %H:%i') as date_modified, assigned_by, (SELECT username FROM users WHERE users.id = assigned_by) as name_assigned_by, assigned_to, (SELECT username FROM users WHERE id = assigned_to) as name_assigned_to FROM todos WHERE assigned_by=? or assigned_to=? ORDER BY date_created DESC", [req.body.userid, req.body.userid], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err });
         res.status(200).send(results);
     });
 });
 // insert todo
 router.post('/add', (req, res) => {
-    db.query('INSERT INTO todos (`title`, `description`, `assigned_by`, `assigned_to`, `done`, `date_created`) VALUES (?, ?, ?, ?, 0, CURRENT_TIMESTAMP)', [req.body.title, req.body.description, req.body.assigned_by, req.body.assigned_to], (err, results, fields) => {
+    db.query('INSERT INTO todos (`title`, `description`, `assigned_by`, `assigned_to`, `done`, `date_created`) VALUES (?, ?, ?, ?, 0, CURRENT_TIMESTAMP())', [req.body.title, req.body.description, req.body.assigned_by, req.body.assigned_to], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send({ message: 'Successfully added todo!' });
     });
@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
 });
 // delete todo
 router.delete('/:id', (req, res) => {
-    db.query('DELETE FROM todos WHERE id=? ORDER BY date_created DESC', [req.params.id], (err, results, fields) => {
+    db.query('DELETE FROM todos WHERE id=?', [req.params.id], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send({ message: 'Successfully deleted todo!' });
     });
@@ -37,7 +37,7 @@ router.put('/:id', (req, res) => {
 });
 // display comments in a todo
 router.get('/:id/comments', (req, res) => {
-    db.query('SELECT * FROM comments WHERE todo_id=?', [req.params.id], (err, results, fields) => {
+    db.query('SELECT id, todo_id, content, comment_by, (SELECT username FROM users WHERE users.id = comment_by) as name_comment_by FROM comments WHERE todo_id=?', [req.params.id], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
     });
@@ -46,7 +46,7 @@ router.get('/:id/comments', (req, res) => {
 router.post('/:id/comments', (req, res) => {
     db.query('INSERT INTO comments(`todo_id`, `comment_by`, `content`, `comment_date`) VALUES (?, ?, ?, CURRENT_TIMESTAMP())', [req.params.id, req.body.comment_by, req.body.content], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
-        res.status(200).send({ message: 'Successfully updated comment!' });
+        res.status(200).send({ message: 'Successfully added comment!' });
     });
 });
 // by mode display logs

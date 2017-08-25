@@ -51,7 +51,7 @@ router.post('/:id/comments', (req, res) => {
 });
 // by mode display logs
 router.post('/logs', (req, res) => {
-    db.query('SELECT * FROM logs l, todos t, users u WHERE t.assigned_by=? OR t.assigned_to=? AND l.todo_id=t.id AND t.assigned_by=u.id ORDER BY l.date_modified DESC', [req.body.userid, req.body.userid], (err, results, fields) => {
+    db.query('SELECT l.id, l.todo_id, l.mode, l.modified_by, (SELECT username FROM users WHERE id=l.modified_by) as name_modified_by, l.date_modified, t.title FROM logs l, todos t, users u WHERE (t.assigned_by=? OR t.assigned_to=?) AND l.todo_id=t.id AND t.assigned_by=u.id ORDER BY l.date_modified DESC', [req.body.userid, req.body.userid], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
     });

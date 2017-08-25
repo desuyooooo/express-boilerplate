@@ -98,6 +98,6 @@ table name: comments
 create table comments (id int primary key not null auto_increment, todo_id int not null, comment_by int not null, content varchar (100) not null, comment_date datetime default CURRENT_TIMESTAMP());
 
 table name: logs
-create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP(), assigned_to varchar (50) not null, assigned_by varchar (50) not null);
+create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP(), assigned_to int not null, assigned_by int not null);
 */
 module.exports = router;

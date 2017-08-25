@@ -58,7 +58,7 @@ router.post('/logs', (req, res) => {
 });
 // by mode insert
 router.post('/logs/insert', (req, res) => {
-    db.query('INSERT INTO logs(`todo_id`, `title`, `description`, `modified_by`, `content`) VALUES (?, ?, ?, ?)', [req.body.todoid, req.body.title, req.body.description, req.body.modified_by, req.body.content], (err, results, fields) => {
+    db.query('INSERT INTO logs(`todo_id`, `content`, `modified_by`) VALUES (?, ?, ?)', [req.body.todoid, req.body.content, req.body.modified_by], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send({ message: 'Successfully added to logs'});
     });
@@ -98,6 +98,6 @@ table name: comments
 create table comments (id int primary key not null auto_increment, todo_id int not null, comment_by int not null, content varchar (100) not null, comment_date datetime default CURRENT_TIMESTAMP());
 
 table name: logs
-create table logs (id int primary key not null auto_increment, todo_id int not null, title varchar (50) not null, description varchar (50) not null, content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP());
+create table logs (id int primary key not null auto_increment, todo_id int not null, content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP());
 */
 module.exports = router;

@@ -51,7 +51,7 @@ router.post('/:id/comments', (req, res) => {
 });
 // by mode display logs
 router.post('/logs', (req, res) => {
-    db.query('SELECT l.id, l.todo_id, l.mode, l.content,l.modified_by, (SELECT username FROM users WHERE id=l.modified_by) as name_modified_by, l.date_modified, t.title, l.assigned_to, l.assigned_by FROM logs l, todos t, users u WHERE (t.assigned_by=? OR t.assigned_to=?) ORDER BY l.date_modified DESC', [req.body.userid, req.body.userid], (err, results, fields) => {
+    db.query("SELECT l.id, l.todo_id, l.mode, l.content,l.modified_by, (SELECT username FROM users WHERE id=l.modified_by) as name_modified_by, date_format(l.date_modified, '%b %e %Y %H:%i') as date_modified, l.assigned_to, l.assigned_by FROM logs l WHERE l.assigned_by=? or l.assigned_to=? ORDER BY l.date_modified DESC", [req.body.userid, req.body.userid], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
     });
@@ -98,6 +98,6 @@ table name: comments
 create table comments (id int primary key not null auto_increment, todo_id int not null, comment_by int not null, content varchar (100) not null, comment_date datetime default CURRENT_TIMESTAMP());
 
 table name: logs
-create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP(), assigned_to varchar (50) not null, assigned_by varchar (50) not null);
+create table logs (id int primary key not null auto_increment, todo_id int not null, mode ENUM('add', 'update', 'delete', 'checked', 'comment'), content varchar (100) not null, modified_by int not null, date_modified datetime default CURRENT_TIMESTAMP(), assigned_to int not null, assigned_by int not null);
 */
 module.exports = router;

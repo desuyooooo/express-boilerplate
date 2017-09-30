@@ -3,7 +3,7 @@ var db = require('../../../lib/database')();
 // display all
 router.post('/', (req, res) => {
     db.query("SELECT id, title, description, done, date_format(date_created, '%b %e %Y %H:%i') as date_created, date_format(date_modified, '%b %e %Y %H:%i') as date_modified, assigned_by, (SELECT username FROM users WHERE users.id = assigned_by) as name_assigned_by, assigned_to, (SELECT username FROM users WHERE id = assigned_to) as name_assigned_to FROM todos WHERE assigned_by=? or assigned_to=? ORDER BY date_created DESC", [req.body.userid, req.body.userid], (err, results, fields) => {
-        if (err) return res.status(400).send({ error: err });
+        if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
     });
 });

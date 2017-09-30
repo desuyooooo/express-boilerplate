@@ -41,8 +41,8 @@ router.post('/driver/destination', (req, res) => {
 
 /*  // MYSQL queries
 DATABASES:
-database name: express
-create database express;
+database name: cheesydrop
+create database cheesydrop;
 
 TABLES:
 table name: users

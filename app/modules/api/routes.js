@@ -8,7 +8,6 @@ router.get('/', (req, res) => {
 });
 
 //router.use('/users', require('../admin/users/api'));
-router.use('/todos', require('./todos/api'));
 router.use('/users', require('./users/api'));
 router.use('/cheesydrop', require('./cheesydrop/ai'));
 

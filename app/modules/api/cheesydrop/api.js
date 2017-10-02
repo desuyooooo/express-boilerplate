@@ -46,7 +46,7 @@ create database cheesydrop;
 
 TABLES:
 table name: users
-create table users (id int primary key auto_increment not null, username varchar(20) unique not null, password varchar(10000) not null, fullname varchar(100) not null, user_type ENUM('DRV', 'GRD'), status ENUM('ready', 'preparing', 'not going') DEFAULT 'ready', code varchar(50) unique);
+create table users (id int primary key auto_increment not null, username varchar(20) unique not null, password varchar(10000) not null, fullname varchar(100) not null, user_type ENUM('DRV', 'GRD'), status ENUM('ready', 'preparing', 'not going') DEFAULT 'ready', code varchar(50));
 
 table name: location
 create table location (id int primary key auto_increment not null, userid int not null, location varchar(1000) default 'NOT SET', lttd float(2, 7) DEFAULT '0', lngtd float(3, 7) DEFAULT '0');

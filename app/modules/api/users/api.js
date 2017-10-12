@@ -3,7 +3,7 @@ var db = require('../../../lib/database')();
 
 // register
 router.post('/register', (req, res) => {
-    db.query('INSERT INTO users (`username`, `password`, `fullname`, `user_type`) VALUES (?, md5(?), ?, ?)', [req.body.username, req.body.password, req.body.fullname, req.body.user_type], (err, results, fields) => {
+    db.query('INSERT INTO users (`username`, `password`, `fullname`, `user_type`, `code`) VALUES (?, md5(?), ?, ?, ?)', [req.body.username, req.body.password, req.body.fullname, req.body.user_type, req.body.code], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString(), message: 'Username already exists' });
         res.status(200).send({ message: 'Successfully registered!', login: 'true' });
     });         

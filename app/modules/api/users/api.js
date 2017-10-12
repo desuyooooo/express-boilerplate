@@ -50,5 +50,12 @@ router.post('/guardians', (req, res) => {
         res.status(200).send(results);
     });
 });
+// display code
+router.post('/getcode', (req, res) => {
+    db.query("SELECT code FROM users WHERE id=?", [req.body.id], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err.toString() });
+        res.status(200).send(results);
+    });
+});
 
 module.exports = router;

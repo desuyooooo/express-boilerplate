@@ -13,27 +13,35 @@ router.post('/login', (req, res) => {
 	var result;
     db.query('SELECT * FROM users WHERE username=? and password=md5(?)', [req.body.username, req.body.password], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
-        try{
+        try {
        		result = Object.assign(results[0], {login: 'true', message: 'Successfully logged in!'});
-        }catch(error){
+        } catch(error) {
             result = { error: error.toString(), message: 'Invalid Username or Password', login: 'false' };
         }
     	res.status(200).send(result);
     });
 });
-// set code
-router.put('/code', (req, res) => {
-    db.query("UPDATE users SET code=? WHERE id=?", [req.body.code, req.body.id], (err, results, fields) => {
+
+// extra
+// display code // for devs
+router.post('/getcode', (req, res) => {
+    db.query("SELECT code FROM users WHERE id=?", [req.body.id], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
-        res.status(200).send({ message: 'Successfully set the driver code !' });
+        res.status(200).send(results);
     });
 });
-// extra
 // display all users either type // for devs
 router.get('/users', (req, res) => {
     db.query("SELECT id, username FROM users ORDER BY username ASC", (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
+    });
+});
+// set code // for devs
+router.put('/code', (req, res) => {
+    db.query("UPDATE users SET code=? WHERE id=?", [req.body.code, req.body.id], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err.toString() });
+        res.status(200).send({ message: 'Successfully set the driver code !' });
     });
 });
 // display all driver users // for Devs
@@ -50,12 +58,6 @@ router.post('/guardians', (req, res) => {
         res.status(200).send(results);
     });
 });
-// display code
-router.post('/getcode', (req, res) => {
-    db.query("SELECT code FROM users WHERE id=?", [req.body.id], (err, results, fields) => {
-        if (err) return res.status(400).send({ error: err.toString() });
-        res.status(200).send(results);
-    });
-});
+
 
 module.exports = router;

@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
 
 //router.use('/users', require('../admin/users/api'));
 router.use('/users', require('./users/api'));
-router.use('/cheesydrop', require('./cheesydrop/api'));
+router.use('/location', require('./location/api'));
 
-exports.api = router;
+exports.cheesydrop = router;

@@ -23,14 +23,22 @@ router.post('/login', (req, res) => {
 });
 // code verify
 router.post('/codeverify', (req, res) => {
-    db.query('SELECT COUNT(code) as num FROM users WHERE code=? AND user_type=`DRV`', [req.body.code], (err, results, fields) => {
+    db.query('SELECT COUNT(code) as num FROM users WHERE code=? AND user_type="DRV"', [req.body.code], (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         try {
-            result = Object.assign(results, {valid: (results.num) ? 'true' : 'false'});
+            result = Object.assign(results[0], {valid: (results[0].num) ? true : false});
         } catch (e) {
-            result = {error : error.toString(), message: 'Error in CODE verification.', valid: 'false'};
+            result = {error : error.toString(), message: 'Error in CODE verification.', valid: false};
         }
         res.status(200).send(result);
+    });
+});
+
+// change status // for GRD
+router.put('/status/:id', (req, res) => {
+    db.query("UPDATE location SET status=? WHERE id=?", [req.body.status], (err, results, fields) => {
+        if (err) return res.status(400).send({ error: err.toString() });
+        res.status(200).send({ message: 'Successfully updated status !' });
     });
 });
 
@@ -43,7 +51,7 @@ router.post('/getcode', (req, res) => {
     });
 });
 // display all users either type // for devs
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
     db.query("SELECT id, username FROM users ORDER BY username ASC", (err, results, fields) => {
         if (err) return res.status(400).send({ error: err.toString() });
         res.status(200).send(results);
